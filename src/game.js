@@ -2,6 +2,7 @@ import { Screen } from "./screen";
 import { Loading } from "./scenes/loading";
 import { Menu } from "./scenes/menu";
 import { Scene } from "./scene";
+import { ControlState } from "./control-state";
 
 export class Game {
     constructor({width = 640, height = 640} = {}) {
@@ -12,6 +13,7 @@ export class Game {
             player: 'img/player.png',
             tiles: 'img/tiles.png'
         });
+        this.control = new ControlState();
         this.scenes = {
             loading: new Loading(this),
             menu: new Menu(this),
