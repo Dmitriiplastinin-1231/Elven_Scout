@@ -1,20 +1,30 @@
+import { ImageLoader } from './image-loader';
+
 export class Screen {
     constructor(width, height) {
         this.width = width;
         this.height = height;
-        this.canvas = this.createCanvas();
-        this.canvas.width = width;
-        this.canvas.height = height;
+        this.canvas = this.createCanvas(width, height);
         this.context = this.canvas.getContext('2d');
+        this.isImageLoader = false;
+        this.images = {};
     }
 
-    createCanvas() {
+    loadImages(imageFiles) {
+        const loader = new ImageLoader(imageFiles);
+        loader.load()
+            .then(names => {
+                this.images = Object.assign(this.images, loader.images);
+                this.isImageLoader = true;
+            })
+    }
 
-        let elements = document.getElementById('game');
-        if (elements) {
-            return elements[0];
-        }
-        let canvas = document.createElement('canvas');
+    createCanvas(width, height) {
+
+        let element = document.getElementById('game');
+        let canvas = element || document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
         canvas.setAttribute('id', 'game');
         document.body.appendChild(canvas);
 
@@ -24,5 +34,15 @@ export class Screen {
     fill(color) {
         this.context.fillStyle = color;
         this.context.fillRect(0, 0, this.width, this.height);
+    }
+
+    print(x, y, text) {
+        this.context.fillStyle = "#FFFFFF";
+        this.context.font = "22px Georgia";
+        this.context.fillText(text, x, y);
+    }
+
+    drawImage(x, y, imageName) {
+        this.context.drawImage(this.images[imageName], x, y);
     }
 }
